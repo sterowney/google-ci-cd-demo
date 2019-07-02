@@ -27,8 +27,7 @@ steps:
     args:
       - '-c'
       - |
-        [[ "$BRANCH_NAME" == "master" ]] &&
-        CLUSTER=$$(gcloud config get-value container/cluster)
+        [[ "$BRANCH_NAME" == "master" ]] && CLUSTER=$$(gcloud config get-value container/cluster)
         PROJECT=$$(gcloud config get-value core/project)
         ZONE=$$(gcloud config get-value compute/zone)
 
@@ -37,4 +36,4 @@ steps:
           --zone "$${ZONE}"
 
         sed -i 's|gcr.io/PROJECT_ID/google-demo:.*|gcr.io/$PROJECT_ID/google-demo:$SHORT_SHA|' ./kubernetes/*.yaml
-        kubectl apply --namespace google-demo --recursive -f kubernetes/
+        kubectl apply --namespace google-demo --recursive -f kubernetes/ || echo "Skipping..."
